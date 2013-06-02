@@ -7,7 +7,10 @@ Gem::Specification.new do |s|
   s.authors     = "Daniel Høier Øhrgaard"
   s.email       = 'daniel@stimulacrum.com'
   
-  s.add_dependency 'activesupport', '>= 3.2.0'
+  s.required_ruby_version = '>= 1.9.3'
+  
+  s.add_development_dependency 'tzinfo', '~> 0.3.29'
+  s.add_development_dependency 'activesupport', '>= 3.2.0'
   
   s.files       = ["lib/week_sauce.rb"]
 end
