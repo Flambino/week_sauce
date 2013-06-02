@@ -234,4 +234,30 @@ describe WeekSauce do
     end
   end
   
+  describe "blank! method" do
+    it "clears the instance" do
+      week = WeekSauce.new(max)
+      week.blank!
+      week.to_i.should == 0
+    end
+    
+    it "returns self" do
+      week = WeekSauce.new
+      week.blank!.should be(week)
+    end
+  end
+  
+  describe "all! method" do
+    it "sets all bits" do
+      week = WeekSauce.new
+      week.all!
+      week.to_i.should == max
+    end
+    
+    it "returns self" do
+      week = WeekSauce.new
+      week.all!.should be(week)
+    end
+  end
+  
 end

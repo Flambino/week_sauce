@@ -51,6 +51,16 @@ class WeekSauce
     set coerce_to_bit(wday), bool
   end
   
+  def blank!
+    @value = 0
+    self
+  end
+  
+  def all!
+    @value = MAX_VALUE
+    self
+  end
+  
   def to_i
     @value
   end
