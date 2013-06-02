@@ -260,4 +260,50 @@ describe WeekSauce do
     end
   end
   
+  describe "utilities" do
+    describe "to_a" do
+      it "returns an array" do
+        WeekSauce.new(42).to_a.should include(:monday, :wednesday, :friday)
+        WeekSauce.new.to_a.should == []
+      end
+    end
+    
+    describe "to_hash" do
+      it "to_hash returns a hash" do
+        WeekSauce.new(42).to_hash.should == {
+          sunday:    false,
+          monday:    true,
+          tuesday:   false,
+          wednesday: true,
+          thursday:  false,
+          friday:    true,
+          saturday:  false
+        }
+      end
+    end
+    
+    describe "dup" do
+      let(:week) { WeekSauce.new(rand(0..127)) }
+      
+      it "dups to a new instance" do
+        week.dup.to_i.should == week.to_i
+        week.dup.should_not be(week)
+      end
+    end
+  end
+  
+  describe "comparison" do
+    let(:week) { WeekSauce.new(42) }
+    
+    it "works with fixnums" do
+      week.should     == 42
+      week.should_not == 43
+    end
+    
+    it "works with other instances" do
+      week.should     == WeekSauce.new(42)
+      week.should_not == WeekSauce.new
+    end
+  end
+  
 end

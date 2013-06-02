@@ -52,6 +52,16 @@ class WeekSauce
     @value = [[0, value.to_i].max, MAX_VALUE].min
   end
   
+  # Compare this instance against another instance, or a Fixnum
+  def ==(arg)
+    case arg
+    when self.class, Fixnum
+      to_i == arg.to_i
+    else
+      false
+    end
+  end
+  
   # Returns +true+ if no days are set, +false+ otherwise.
   # Opposite of #any?
   def blank?
@@ -124,6 +134,14 @@ class WeekSauce
   # Returns the raw bitmask integer
   def to_i
     @value
+  end
+  
+  def to_a
+    DAY_NAMES.select { |day| self[day] }
+  end
+  
+  def to_hash
+    Hash[ DAY_NAMES.map { |day| [day, self[day]] } ]
   end
   
   private
