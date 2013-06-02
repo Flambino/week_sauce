@@ -129,13 +129,10 @@ class WeekSauce
   end
   
   DAY_BITS.each do |day, bit|
-    define_method("#{day.to_s}?") do
+    define_method(day) do
       get_bit bit
     end
-    
-    define_method("#{day.to_s}") do
-      get_bit bit
-    end
+    alias_method :"#{day.to_s}?", day
     
     define_method("#{day.to_s}=") do |bool|
       set_bit bit, bool
