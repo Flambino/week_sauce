@@ -7,7 +7,7 @@ require 'date'
 # Extracted from a Rails app, it's intended to be used an ActiveRecord
 # attribute serializer, but it should work fine outside of Rails.
 # 
-# Basic usage
+# Basic usage:
 # 
 #   week = WeekSauce.new
 #   week.blank?          #=> true
@@ -21,7 +21,7 @@ require 'date'
 #   
 #   week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
 # 
-# Rails usage
+# Rails usage:
 # 
 #   class Workout < ActiveRecord::Base
 #     serialize :days, WeekSauce
@@ -41,19 +41,21 @@ require 'date'
 #   week.friday?        #=> true
 # 
 # <b>Note:</b> Similar to <tt>Time#wday</tt>, day-numbers start with Sunday as zero,
-# Monday => 1, Tuesday => 2, etc.
+# Monday => 1, Tuesday => 2, etc.. I.e. these are equivalent:
 #   
-#   week[0] = true         # sets Sunday
+#   week[0]       = true
+#   week[:sunday] = true
+# 
+# Other examples:
+# 
+#   week[:sunday] = true
 #   week[0]                # => true
 #   
-#   week[:sunday] = true  
-#   week[:sunday]          # => true
-#   
-#   time = Time.now       
+#   time = Time.now
 #   week[time] = true      # same as week[time.wday] = true
-#   week[time]             # => true
+#   week[time.to_date]     # => true
 #   
-#   week.unset(:monday, 3) # unsets Monday, and Wednesday
+#   week.unset(:monday, 3) # unsets Monday and Wednesday
 class WeekSauce
   MAX_VALUE = 2**7 - 1
   DAY_NAMES = %w(sunday monday tuesday wednesday thursday friday saturday).map(&:to_sym).freeze
