@@ -153,6 +153,48 @@ describe WeekSauce do
       week.saturday = true
       week.to_i.should == 65
     end
+    
+    describe "using the set method" do
+      it "sets multiple days" do
+        week = WeekSauce.new(42)
+        week.set 0, :tuesday, :thursday, 6
+        week.all?.should be_true
+      end
+    end
+    
+    describe "using the set! method" do
+      it "sets multiple days, and only those days" do
+        week = WeekSauce.new(42)
+        week.set! 0, :tuesday
+        week.to_i.should == 5
+      end
+      
+      it "returns self" do
+        week = WeekSauce.new(42)
+        week.set!(:tuesday).should be(week)
+      end
+    end
+    
+    describe "using the unset method" do
+      it "unsets multiple days" do
+        week = WeekSauce.new(42)
+        week.unset 1, :wednesday, :friday
+        week.blank?.should be_true
+      end
+    end
+    
+    describe "using the unset! method" do
+      it "unsets multiple days, and only those days" do
+        week = WeekSauce.new(42)
+        week.unset! :monday, :wednesday, 4, :friday, 6
+        week.to_i.should == 5
+      end
+      
+      it "returns self" do
+        week = WeekSauce.new(42)
+        week.unset!(:monday).should be(week)
+      end
+    end
   end
   
   describe "reading" do

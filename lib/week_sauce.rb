@@ -28,29 +28,32 @@ require 'date'
 #   end
 #   
 #   workout = Workout.find_by_kind("Weights")
-#   workout.days.tuesday?  #=> true
-#   workout.days.friday?   #=> false
+#   workout.days.to_s #=> "Monday, Wednesday"
+#   workout.days.set!(:tuesday, :thursday) # sets only those days
+#   workout.save
 # 
 # Days can be set and read using Fixnums, symbols or Date/Time objects.
 # Additionally, there are named methods for getting and setting each of
 # the week's days:
 #
 #   week.friday = true
-#   week.friday          #=> true
-#   week.friday?         #=> true
+#   week.friday         #=> true
+#   week.friday?        #=> true
 # 
 # <b>Note:</b> Similar to <tt>Time#wday</tt>, day-numbers start with Sunday as zero,
 # Monday => 1, Tuesday => 2, etc.
 #   
-#   week[0] = true       # sets Sunday
-#   week[0]              # => true
-#
-#   week[:sunday] = true
-#   week[:sunday]        # => true
+#   week[0] = true         # sets Sunday
+#   week[0]                # => true
 #   
-#   time = Time.now
-#   week[time] = true    # same as week[time.wday] = true
-#   week[time]           # => true
+#   week[:sunday] = true  
+#   week[:sunday]          # => true
+#   
+#   time = Time.now       
+#   week[time] = true      # same as week[time.wday] = true
+#   week[time]             # => true
+#   
+#   week.unset(:monday, 3) # unsets Monday, and Wednesday
 class WeekSauce
   MAX_VALUE = 2**7 - 1
   DAY_NAMES = %w(sunday monday tuesday wednesday thursday friday saturday).map(&:to_sym).freeze
@@ -127,15 +130,15 @@ class WeekSauce
   
   DAY_BITS.each do |day, bit|
     define_method("#{day.to_s}?") do
-      get bit
+      get_bit bit
     end
     
     define_method("#{day.to_s}") do
-      get bit
+      get_bit bit
     end
     
     define_method("#{day.to_s}=") do |bool|
-      set bit, bool
+      set_bit bit, bool
     end
   end
   
@@ -146,22 +149,54 @@ class WeekSauce
   # a symbol specifying the day's name (e.g. +:tuesday+, +:friday+), or
   # a Date or Time instance
   def [](wday)
-    get coerce_to_bit(wday)
+    get_bit coerce_to_bit(wday)
   end
   
   # Set or unset the given day. See #[] for possible +wday+ values.
   # Invalid +wday+ values are ignored.
   def []=(wday, bool)
-    set coerce_to_bit(wday), bool
+    set_bit coerce_to_bit(wday), bool
   end
   
-  # Set all days to +false+
+  # Set the given days. Like #[], arguments can be symbols, Fixnums,
+  # or Date/Time objects
+  def set(*days)
+    days.each do |day|
+      self[day] = true
+    end
+  end
+  
+  # Exclusive version of #set - clears the week, and sets only
+  # the days passed. Returns +self+
+  def set!(*days)
+    blank!
+    set(*days)
+    self
+  end
+  
+  # Unset the given days. Like #[], arguments can be symbols,
+  # Fixnums, or Date/Time objects
+  def unset(*days)
+    days.each do |day|
+      self[day] = false
+    end
+  end
+  
+  # Exclusive version of #unset - sets all days to true and
+  # then unsets days passed. Returns +self+
+  def unset!(*days)
+    all!
+    unset(*days)
+    self
+  end
+  
+  # Set all days to +false+. Returns +self+
   def blank!
     @value = 0
     self
   end
   
-  # Set all days to +true+
+  # Set all days to +true+. Returns +self+
   def all!
     @value = MAX_VALUE
     self
@@ -230,13 +265,13 @@ class WeekSauce
   
   protected
   
-    def get(bit) #:nodoc:
+    def get_bit(bit) #:nodoc:
       if DAY_BITS.values.include?(bit)
         @value & bit > 0
       end
     end
     
-    def set(bit, set) #:nodoc:
+    def set_bit(bit, set) #:nodoc:
       if DAY_BITS.values.include?(bit)
         if set
           @value = @value | bit
