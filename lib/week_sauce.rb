@@ -16,8 +16,11 @@ require 'date'
 #   week.saturday = true
 #   week.sunday = true
 #   
-#   week.any?            #=> true
+#   from = Time.parse("2013-04-01") # A Monday
+#   week.next_date(from)            #=> "2013-04-06" (a Saturday)
 #   
+#   week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
+# 
 # Days can be set and read using Fixnums, symbols or Date/Time objects.
 # Additionally, there are named methods for getting and setting each of
 # the week's days:
@@ -136,12 +139,50 @@ class WeekSauce
     @value
   end
   
+  # Returns an array of "set" day names as symbols
   def to_a
     DAY_NAMES.select { |day| self[day] }
   end
   
+  # Returns a hash where the keys are the week's 7 days
+  # as symbols, and the values are booleans
   def to_hash
     Hash[ DAY_NAMES.map { |day| [day, self[day]] } ]
+  end
+  
+  # Return the next date matching the bitmask, or +nil+ if the
+  # week is blank.
+  # 
+  # If no +from_date+ argument is given, it'll default to
+  # <tt>Date.current</tt> if ActiveSupport is available,
+  # or <tt>Date.today</tt> otherwise.
+  # 
+  # If +from_date+ is given, #next_date will return the first
+  # matching date from - and including - +from_date+
+  def next_date(from_date = nil)
+    return nil if blank?
+    from_date ||= if Date.respond_to?(:current)
+      Date.current
+    else
+      Date.today
+    end
+    from_date = from_date.to_date
+    until self[from_date.wday]
+      from_date = from_date.succ
+    end
+    from_date.dup
+  end
+  
+  # Return all dates in the given +date_range+ that match the
+  # bitmask. If the week's blank, an empty array will be
+  # returned.
+  # 
+  # Note that the range is converted to an array, which
+  # is then filtered, so if the range is "backwards" (high to
+  # low) an empty array will be returned
+  def dates_in(date_range)
+    return [] if blank?
+    date_range.to_a.select { |date| self[date.wday] }
   end
   
   private

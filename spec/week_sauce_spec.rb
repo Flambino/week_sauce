@@ -306,4 +306,54 @@ describe WeekSauce do
     end
   end
   
+  describe "date calculation" do
+    describe "next_date" do
+      let(:week) { WeekSauce.new(2**3) } # Wednesday
+      
+      it "finds next date from today if not argument is passed" do
+        date = Date.today
+        offset = 3 - date.wday
+        offset += 7 if offset < 0
+        week.next_date.should == date + offset.days
+      end
+      
+      it "finds next date from a given day" do
+        date = Time.parse "2013-04-01" # April fool's (also a happens to be a Monday)
+        week.next_date(date).should == date.to_date + 2.days
+      end
+      
+      it "returns a duplicate of the from argument if it matches" do
+        week = WeekSauce.new(3) # Monday
+        date = Date.parse "2013-04-01"
+        result = week.next_date(date)
+        result.should == date
+        result.should_not be(date)
+      end
+      
+      it "returns nil if the week's blank" do
+        WeekSauce.new.next_date.should be_nil
+      end
+    end
+    
+    describe "dates_in" do
+      it "returns an array of dates in a given range" do
+        week = WeekSauce.new
+        starts = Date.today
+        ends   = starts + 3.weeks
+        week[starts] = true
+        dates = week.dates_in(starts..ends)
+        dates.length.should == 4
+        dates.first.should == starts
+        dates.last.should == ends
+      end
+      
+      it "returns an empty array if the week's blank" do
+        week = WeekSauce.new
+        starts = Date.today
+        ends   = starts + 3.weeks
+        week.dates_in(starts...ends).empty?.should be_true
+      end
+    end
+  end
+  
 end
