@@ -29,6 +29,20 @@ class WeekSauce
     any? && !single?
   end
   
+  DAY_BITS.each do |day, bit|
+    define_method("#{day.to_s}?") do
+      get bit
+    end
+    
+    define_method("#{day.to_s}") do
+      get bit
+    end
+    
+    define_method("#{day.to_s}=") do |bool|
+      set bit, bool
+    end
+  end
+  
   def [](wday)
     get coerce_to_bit(wday)
   end
