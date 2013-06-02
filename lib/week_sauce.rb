@@ -185,15 +185,15 @@ class WeekSauce
     date_range.to_a.select { |date| self[date.wday] }
   end
   
-  private
+  protected
   
-    def get(bit)
+    def get(bit) #:nodoc:
       if DAY_BITS.values.include?(bit)
         @value & bit > 0
       end
     end
     
-    def set(bit, set)
+    def set(bit, set) #:nodoc:
       if DAY_BITS.values.include?(bit)
         if set
           @value = @value | bit
@@ -203,7 +203,7 @@ class WeekSauce
       end
     end
     
-    def coerce_to_bit(wday)
+    def coerce_to_bit(wday) #:nodoc:
       case wday
       when Symbol
         DAY_BITS[wday]
