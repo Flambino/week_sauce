@@ -36,7 +36,7 @@ describe WeekSauce do
         week.blank?.should  be_true
         week.any?.should    be_false
         week.many?.should   be_false
-        week.single?.should be_false
+        week.one?.should    be_false
         week.all?.should    be_false
         days.each do |day|
           week.send("#{day.to_s}?").should be_false
@@ -50,7 +50,7 @@ describe WeekSauce do
         week.blank?.should  be_false
         week.any?.should    be_true
         week.many?.should   be_false
-        week.single?.should be_true
+        week.one?.should    be_true
         week.all?.should    be_false
         days.each do |day|
           week.send("#{day.to_s}?").should == (day == :thursday)
@@ -64,7 +64,7 @@ describe WeekSauce do
         week.blank?.should  be_false
         week.any?.should    be_true
         week.many?.should   be_true
-        week.single?.should be_false
+        week.one?.should    be_false
         week.all?.should    be_false
         days[0..4].each do |day|
           week.send("#{day.to_s}?").should be_true
@@ -81,7 +81,7 @@ describe WeekSauce do
         week.blank?.should  be_false
         week.any?.should    be_true
         week.many?.should   be_true
-        week.single?.should be_false
+        week.one?.should    be_false
         week.all?.should    be_true
         days.each do |day|
           week.send("#{day.to_s}?").should be_true

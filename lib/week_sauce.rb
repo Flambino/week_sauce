@@ -21,12 +21,12 @@ class WeekSauce
     !blank?
   end
   
-  def single?
+  def one?
     any? && @value & (@value - 1) == 0
   end
   
   def many?
-    any? && !single?
+    any? && !one?
   end
   
   DAY_BITS.each do |day, bit|
