@@ -39,7 +39,7 @@ require 'date'
 #   week.friday          #=> true
 #   week.friday?         #=> true
 # 
-# *Note:* Similar to <tt>Time#wday</tt>, day-numbers start with Sunday as zero,
+# <b>Note:</b> Similar to <tt>Time#wday</tt>, day-numbers start with Sunday as zero,
 # Monday => 1, Tuesday => 2, etc.
 #   
 #   week[0] = true       # sets Sunday
@@ -175,6 +175,16 @@ class WeekSauce
   # Returns an array of "set" day names as symbols
   def to_a
     DAY_NAMES.select { |day| self[day] }
+  end
+  
+  # Returns a string list of day names, or <tt>"No days set"</tt>
+  # if the week's blank
+  def inspect
+    if blank?
+      "No days set"
+    else
+      to_a.map { |day| day.to_s.sub(/./, &:upcase) }.join(", ")
+    end
   end
   
   # Returns a hash where the keys are the week's 7 days

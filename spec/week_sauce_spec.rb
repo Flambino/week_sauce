@@ -290,6 +290,18 @@ describe WeekSauce do
         week.dup.should_not be(week)
       end
     end
+    
+    describe "inspect" do
+      it "lists days" do
+        week = WeekSauce.new(42)
+        week.inspect.should == "Monday, Wednesday, Friday"
+      end
+      
+      it "returns a simple message if no days have been set" do
+        week = WeekSauce.new
+        week.inspect.should == "No days set"
+      end
+    end
   end
   
   describe "comparison" do
