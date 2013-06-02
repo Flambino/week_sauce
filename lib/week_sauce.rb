@@ -7,55 +7,35 @@ require 'date'
 # Extracted from a Rails app, it's intended to be used an ActiveRecord
 # attribute serializer, but it should work fine outside of Rails.
 # 
-# Basic usage:
+# == Basic usage
 # 
-#   week = WeekSauce.new
-#   week.blank?          #=> true
-#   
-#   # Mark off the weekend
-#   week.saturday = true
-#   week.sunday = true
-#   
-#   from = Time.parse("2013-04-01") # A Monday
-#   week.next_date(from)            #=> "2013-04-06" (a Saturday)
-#   
-#   week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
+#     week = WeekSauce.new(16) # set a specific bitmask
+#     week.blank?     #=> false
+#     week.one?       #=> true
+#     week.thursday?  #=> true
+#     
+#     week = WeekSauce.new     # defaults to a zero-bitmask
+#     week.blank? #=> true
+#     
+#     # Mark off the weekend
+#     week.set(:saturday, :sunday)
+#     
+#     from = Time.parse("2013-04-01") # A Monday
+#     week.next_date(from)            #=> "2013-04-06" (a Saturday)
+#     
+#     week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
 # 
-# Rails usage:
+# == Rails usage
 # 
-#   class Workout < ActiveRecord::Base
-#     serialize :days, WeekSauce
-#   end
-#   
-#   workout = Workout.find_by_kind("Weights")
-#   workout.days.to_s #=> "Monday, Wednesday"
-#   workout.days.set!(:tuesday, :thursday) # sets only those days
-#   workout.save
+#     class Workout < ActiveRecord::Base
+#       serialize :days, WeekSauce
+#     end
+#     
+#     workout = Workout.find_by_kind("Weights")
+#     workout.days.to_s #=> "Monday, Wednesday"
+#     workout.days.set!(:tuesday, :thursday) # sets only those days
+#     workout.save
 # 
-# Days can be set and read using Fixnums, symbols or Date/Time objects.
-# Additionally, there are named methods for getting and setting each of
-# the week's days:
-#
-#   week.friday = true
-#   week.friday         #=> true
-#   week.friday?        #=> true
-# 
-# <b>Note:</b> Similar to <tt>Time#wday</tt>, day-numbers start with Sunday as zero,
-# Monday => 1, Tuesday => 2, etc.. I.e. these are equivalent:
-#   
-#   week[0]       = true
-#   week[:sunday] = true
-# 
-# Other examples:
-# 
-#   week[:sunday] = true
-#   week[0]                # => true
-#   
-#   time = Time.now
-#   week[time] = true      # same as week[time.wday] = true
-#   week[time.to_date]     # => true
-#   
-#   week.unset(:monday, 3) # unsets Monday and Wednesday
 class WeekSauce
   MAX_VALUE = 2**7 - 1
   DAY_NAMES = %w(sunday monday tuesday wednesday thursday friday saturday).map(&:to_sym).freeze
