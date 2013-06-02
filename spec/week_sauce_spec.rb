@@ -356,4 +356,33 @@ describe WeekSauce do
     end
   end
   
+  describe "serialization" do
+    describe "load" do
+      it "loads from a string" do
+        week = WeekSauce.load("127")
+        week.to_i.should == 127
+      end
+      
+      it "clamps value" do
+        WeekSauce.load("1027").to_i.should == 127
+        WeekSauce.load("-127").to_i.should == 0
+      end
+      
+      it "absorbs conversion errors" do
+        WeekSauce.load([]).to_i.should == 0
+      end
+    end
+    
+    describe "dump" do
+      it "dumps to a string" do
+        week = WeekSauce.new(42)
+        WeekSauce.dump(week).should == "42"
+      end
+      
+      it "defaults to outputting zero" do
+        WeekSauce.dump(123).should == "0"
+      end
+    end
+  end
+  
 end

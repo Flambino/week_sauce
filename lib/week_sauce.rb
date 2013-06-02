@@ -21,6 +21,16 @@ require 'date'
 #   
 #   week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
 # 
+# Rails usage
+# 
+#   class Workout < ActiveRecord::Base
+#     serialize :days, WeekSauce
+#   end
+#   
+#   workout = Workout.find_by_kind("Weights")
+#   workout.days.tuesday?  #=> true
+#   workout.days.friday?   #=> false
+# 
 # Days can be set and read using Fixnums, symbols or Date/Time objects.
 # Additionally, there are named methods for getting and setting each of
 # the week's days:
@@ -45,6 +55,29 @@ class WeekSauce
   MAX_VALUE = 2**7 - 1
   DAY_NAMES = %w(sunday monday tuesday wednesday thursday friday saturday).map(&:to_sym).freeze
   DAY_BITS  = Hash[ DAY_NAMES.zip(Array.new(7) { |i| 2**i }) ].freeze
+  
+  class << self
+    # ActiveRecord attribute serialization support
+    # 
+    # Create a WeekSauce instance from a stringified integer
+    # bitmask. The value will be clamped (see #new)
+    def load(string)
+      self.new(string.to_i)
+    rescue NoMethodError => err
+      self.new
+    end
+    
+    # ActiveRecord attribute serialization support
+    # 
+    # Dump a WeekSauce instance to a stringified instance bitmask
+    def dump(instance)
+      if instance.is_a?(self)
+        instance.to_i.to_s
+      else
+        "0"
+      end
+    end
+  end
   
   # Init a new WeekSauce instance. If +value+ is omitted, the new
   # instance will default to a bitmask of zero, i.e. no days set.
