@@ -5,8 +5,9 @@ Gem::Specification.new do |s|
   
   s.summary     = "Day-of-week bitmask"
   s.description = "A simple gem to serialize selected days of the week as a bitmask"
-  s.authors     = "Daniel Høier Øhrgaard"
+  s.author      = "Daniel Høier Øhrgaard"
   s.email       = 'daniel@stimulacrum.com'
+  s.homepage    = 'https://github.com/Flambino/week_sauce'
   
   s.required_ruby_version = '>= 1.9.3'
   
