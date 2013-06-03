@@ -1,11 +1,21 @@
 # WeekSauce
 
 WeekSauce is a simple class that functions as a days-of-the-week bitmask.
-Useful for things that repeat weekly, and/or can occur or one or more days
+Useful for things that repeat weekly, and/or can occur on one or more days
 of the week.
 
 Extracted from a Rails app, it's intended to be used an ActiveRecord
 attribute serializer, but it should work fine outside of Rails.
+
+## Installation
+
+It's a gem, so:
+
+    gem install week_sauce
+
+or, if you're using Bundler, put this in your Gemfile:
+
+    gem 'week_sauce'
 
 ## Basic usage
 
@@ -35,6 +45,8 @@ attribute serializer, but it should work fine outside of Rails.
     workout.days.to_s #=> "Monday, Wednesday"
     workout.days.set!(:tuesday, :thursday) # sets only those days
     workout.save
+
+The underlying `days` database column can be either a string or integer type.
 
 ## API
 
