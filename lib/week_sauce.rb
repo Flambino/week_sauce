@@ -1,40 +1,40 @@
 require 'date'
 
-# WeekSauce is a simple class that functions as a days-of-the-week bitmask.
-# Useful for things that repeat weekly, and/or can occur or one or more days
-# of the week.
+# WeekSauce is a simple class that functions as a days-of-the-week bitmask. Useful for things that repeat weekly, and/or can occur on one or more days of the week.
 # 
-# Extracted from a Rails app, it's intended to be used an ActiveRecord
-# attribute serializer, but it should work fine outside of Rails.
+# It was extracted from a Rails app, and is primarily intended to used as an ActiveRecord attribute serializer, but it should work fine outside of Rails too.
 # 
-# == Basic usage
+# == The Basics
 # 
-#     week = WeekSauce.new(16) # set a specific bitmask
-#     week.blank?     #=> false
-#     week.one?       #=> true
-#     week.thursday?  #=> true
-#     
-#     week = WeekSauce.new     # defaults to a zero-bitmask
-#     week.blank? #=> true
-#     
-#     # Mark off the weekend
-#     week.set(:saturday, :sunday)
-#     
-#     from = Time.parse("2013-04-01") # A Monday
-#     week.next_date(from)            #=> "2013-04-06" (a Saturday)
-#     
-#     week.dates_in(from..from + 1.week) => ["2013-04-06", "2013-04-07"]
+#   week = WeekSauce.new(16) # init with bitmask (optional)
+#   week.blank?     #=> false
+#   week.one?       #=> true
+#   week.thursday?  #=> true
+#   
+#   week = WeekSauce.new     # defaults to a zero-bitmask
+#   week.blank? #=> true
+#   
+#   # Mark the weekend
+#   week.set(:saturday, :sunday)
+#   
+#   from = Time.parse("2013-04-01") # A Monday
+#   week.next_date(from)            #=> Sat, 06 Apr 2013
+#   
+#   week.dates_in(from..from + 1.week) => [Sat, 06 Apr 2013 , Sun, 07 Apr 2013]
 # 
-# == Rails usage
+# == Usage with ActiveRecord
 # 
-#     class Workout < ActiveRecord::Base
-#       serialize :days, WeekSauce
-#     end
-#     
-#     workout = Workout.find_by_kind("Weights")
-#     workout.days.to_s #=> "Monday, Wednesday"
-#     workout.days.set!(:tuesday, :thursday) # sets only those days
-#     workout.save
+#   class Workout < ActiveRecord::Base
+#     serialize :days, WeekSauce
+#   end
+#   
+#   workout = Workout.find_by_kind("Weights")
+#   workout.days.inspect #=> "20: Tuesday, Thursday"
+#   
+#   workout.days.set!(:tuesday, :thursday) # sets only those days
+#   workout.save
+# 
+# The underlying `days` database column can be either a string or integer type.
 # 
 class WeekSauce
   MAX_VALUE = 2**7 - 1
@@ -54,7 +54,7 @@ class WeekSauce
     
     # ActiveRecord attribute serialization support
     # 
-    # Dump a WeekSauce instance to a stringified instance bitmask
+    # Dump a WeekSauce instance to a stringified bitmask value
     def dump(instance)
       if instance.is_a?(self)
         instance.to_i.to_s
@@ -73,7 +73,7 @@ class WeekSauce
     @value = [[0, value.to_i].max, MAX_VALUE].min
   end
   
-  # Compare this instance against another instance, or a Fixnum
+  # Compare this instance against another instance or a Fixnum
   def ==(arg)
     case arg
     when self.class, Fixnum
@@ -110,6 +110,7 @@ class WeekSauce
     any? && !one?
   end
   
+  # Create the day=, day, and day? methods
   DAY_BITS.each do |day, bit|
     define_method(day) do
       get_bit bit
@@ -121,12 +122,12 @@ class WeekSauce
     end
   end
   
-  # Returns +true+ if the given weekday is set, +false+ if it isn't,
+  # Returns +true+ if the given day is set, +false+ if it isn't,
   # and +nil+ if the argument was invalid.
   # 
   # The +wday+ argument can be a Fixnum from 0 (Sunday) to 6 (Saturday),
   # a symbol specifying the day's name (e.g. +:tuesday+, +:friday+), or
-  # a Date or Time instance
+  # a Date or Time object
   def [](wday)
     get_bit coerce_to_bit(wday)
   end
@@ -145,7 +146,7 @@ class WeekSauce
     end
   end
   
-  # Exclusive version of #set - clears the week, and sets only
+  # Exclusive version of #set. Clears the week, and sets only
   # the days passed. Returns +self+
   def set!(*days)
     blank!
@@ -161,7 +162,7 @@ class WeekSauce
     end
   end
   
-  # Exclusive version of #unset - sets all days to true and
+  # Exclusive version of #unset. Sets all days to true and
   # then unsets days passed. Returns +self+
   def unset!(*days)
     all!
@@ -215,7 +216,7 @@ class WeekSauce
   # 
   # If no +from_date+ argument is given, it'll default to
   # <tt>Date.current</tt> if ActiveSupport is available,
-  # or <tt>Date.today</tt> otherwise.
+  # otherwise it'll use <tt>Date.today</tt>.
   # 
   # If +from_date+ is given, #next_date will return the first
   # matching date from - and including - +from_date+
