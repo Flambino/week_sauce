@@ -191,13 +191,16 @@ class WeekSauce
     DAY_NAMES.select { |day| self[day] }
   end
   
-  # Returns a string list of day names, or <tt>"No days set"</tt>
-  # if the week's blank
+  # Returns a string with the bitmask value and a list of
+  # "set" days, or a simple message if all/no days are set
   def inspect
     if blank?
-      "No days set"
+      "0: No days set"
+    elsif all?
+      "#{MAX_VALUE}: All days set"
     else
-      to_a.map { |day| day.to_s.sub(/./, &:upcase) }.join(", ")
+      list = to_a.map { |day| day.to_s.sub(/./, &:upcase) }.join(", ")
+      "#{@value}: #{list}"
     end
   end
   

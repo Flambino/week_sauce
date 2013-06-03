@@ -334,14 +334,19 @@ describe WeekSauce do
     end
     
     describe "inspect" do
-      it "lists days" do
+      it "lists bitmask & days" do
         week = WeekSauce.new(42)
-        week.inspect.should == "Monday, Wednesday, Friday"
+        week.inspect.should == "42: Monday, Wednesday, Friday"
       end
       
       it "returns a simple message if no days have been set" do
         week = WeekSauce.new
-        week.inspect.should == "No days set"
+        week.inspect.should == "0: No days set"
+      end
+      
+      it "returns a simple message if all days have been set" do
+        week = WeekSauce.new.all!
+        week.inspect.should == "127: All days set"
       end
     end
   end
