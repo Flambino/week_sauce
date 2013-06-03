@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   
   s.required_ruby_version = '>= 1.9.3'
   
+  s.add_development_dependency 'rspec'
   s.add_development_dependency 'tzinfo', '~> 0.3.29'
   s.add_development_dependency 'activesupport', '>= 3.2.0'
   
