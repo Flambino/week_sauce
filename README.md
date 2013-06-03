@@ -1,4 +1,4 @@
-# WeekSauce
+# WeekSauce [![Code Climate](https://codeclimate.com/github/Flambino/week_sauce.png)](https://codeclimate.com/github/Flambino/week_sauce)
 
 WeekSauce is a simple class that functions as a days-of-the-week bitmask. Useful for things that repeat weekly, and/or can occur on one or more days of the week.
 
