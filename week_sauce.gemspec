@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'week_sauce'
-  s.version     = '0.0.0'
+  s.version     = '0.0.1'
   s.license     = "MIT"
   
   s.summary     = "Day-of-week bitmask"
