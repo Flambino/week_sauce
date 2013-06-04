@@ -1,5 +1,9 @@
 require 'date'
-
+# 
+# {<img src="https://travis-ci.org/Flambino/week_sauce.png?branch=master" alt="Build Status" />}[https://travis-ci.org/Flambino/week_sauce]
+# {<img src="https://badge.fury.io/rb/week_sauce.png" alt="Gem Version" />}[http://badge.fury.io/rb/week_sauce]
+# {<img src="https://codeclimate.com/github/Flambino/week_sauce.png" />}[https://codeclimate.com/github/Flambino/week_sauce]
+# 
 # WeekSauce is a simple class that functions as a days-of-the-week bitmask. Useful for things that repeat weekly, and/or can occur on one or more days of the week.
 # 
 # It was extracted from a Rails app, and is primarily intended to used as an ActiveRecord attribute serializer, but it should work fine outside of Rails too.
