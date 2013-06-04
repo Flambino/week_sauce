@@ -133,6 +133,6 @@ week.inspect #=> string describing the bitmask values and days, e.g. "3: Sunday,
 
 ## Odds and ends
 
-The gem was extracted from a Rails 3.2 app, and requires Ruby 1.9.3 or higher. The requirement is undoubtedly overkill, but the code currently uses the 1.9+ hash syntax. It could probably be converted very easily though (feel free!).
+The gem was extracted from a Rails 3.2 app, and requires Ruby 1.9.2 or higher. The requirement is undoubtedly overkill, but the specs currently use the 1.9+ hash syntax. It could be converted very easily though (feel free!).
 
-The code has good test coverage (using RSpec), but hasn't been tested outside of Ruby 1.9.3.
+The code has good test coverage (using RSpec), and is tested against [a few 1.9 and 2.0 rubies using TravisCI](https://travis-ci.org/Flambino/week_sauce).
