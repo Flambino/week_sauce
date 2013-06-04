@@ -125,9 +125,12 @@ class WeekSauce
   # Returns +true+ if the given day is set, +false+ if it isn't,
   # and +nil+ if the argument was invalid.
   # 
-  # The +wday+ argument can be a Fixnum from 0 (Sunday) to 6 (Saturday),
-  # a symbol specifying the day's name (e.g. +:tuesday+, +:friday+), or
-  # a Date or Time object
+  # The +wday+ argument can be
+  # - a Fixnum from 0 (Sunday) to 6 (Saturday),
+  # - a day-name symbol, e.g. +:tuesday+, +:friday+,
+  # - a day-name string (case-insensitive), e.g. <tt>"Monday"</tt>, <tt>"sunday"</tt>
+  # - a Time object, or
+  # - a Date object
   def [](wday)
     get_bit coerce_to_bit(wday)
   end
@@ -218,6 +221,9 @@ class WeekSauce
   # <tt>Date.current</tt> if ActiveSupport is available,
   # otherwise it'll use <tt>Date.today</tt>.
   # 
+  # If +from_date+ argument can be a +Date+ or a +Time+ object
+  # (the latter will be converted using +#to_date+)
+  # 
   # If +from_date+ is given, #next_date will return the first
   # matching date from - and including - +from_date+
   def next_date(from_date = nil)
@@ -268,10 +274,13 @@ class WeekSauce
       case wday
       when Symbol
         DAY_BITS[wday]
-      when Fixnum
+      when Fixnum, /\A[0-6]\Z/
+        wday = wday.to_i
         (0..6).include?(wday) ? 2**wday : nil
       when Date, Time
         2**wday.wday
+      when /\A(sun|mon|tues|wednes|thurs|fri|satur)day\Z/i
+        DAY_BITS[wday.downcase.to_sym]
       end
     end
   

@@ -101,6 +101,22 @@ describe WeekSauce do
         week.to_i.should == 65
       end
       
+      it "works with integer strings" do
+        week["0"] = true
+        week.to_i.should == 1
+        week["5"] = true
+        week.to_i.should == 33
+      end
+      
+      it "works with day-name strings (upper- and lowercase)" do
+        week["sunday"] = true
+        week.to_i.should == 1
+        week["THURSDAY"] = true
+        week.to_i.should == 17
+        week["MoNdAy"] = true
+        week.to_i.should == 19
+      end
+      
       it "ignores out-of-bounds integers" do
         week[-1] = true
         week.to_i.should == 0
@@ -214,6 +230,31 @@ describe WeekSauce do
       it "returns nil for out-of-bounds integers" do
         week[-1].should be_nil
         week[7].should be_nil
+      end
+      
+      it "works with integer strings" do
+        week["0"].should be_false
+        week["1"].should be_true
+        week["2"].should be_false
+        week["3"].should be_true
+        week["4"].should be_false
+        week["5"].should be_true
+        week["6"].should be_false
+      end
+      
+      it "works with day-name strings (upper- and lowercase)" do
+        week["sunday"].should be_false
+        week["MONDAY"].should be_true
+        week["tuesday"].should be_false
+        week["WeDnEsDaY"].should be_true
+        week["thursday"].should be_false
+        week["friDAY"].should be_true
+        week["SATURday"].should be_false
+      end
+      
+      it "returns nil for non-sensical strings" do
+        week["bacon"].should be_nil
+        week["monkey"].should be_nil
       end
       
       it "works with day-name symbols" do

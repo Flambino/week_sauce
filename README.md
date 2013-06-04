@@ -52,7 +52,7 @@ The underlying `days` database column can be either a string or integer type.
 
 ## API
 
-Individual days can be set and read using Fixnums, symbols or Date/Time objects. Additionally, there are named methods for getting and setting each of the week's days:
+Individual days can be set and read using Fixnums, strings, symbols or Date/Time objects. Additionally, there are named methods for getting and setting each of the week's days:
 
 ``` ruby
 time = Time.parse("2013-04-01") # A Monday
@@ -60,7 +60,9 @@ time = Time.parse("2013-04-01") # A Monday
 # These are all equivalent
 week.monday        = true
 week[:monday]      = true
+week["monday"]     = true # case-insensitive
 week[1]            = true
+week["1"]          = true
 week[time]         = true
 week[time.to_date] = true
 
@@ -68,7 +70,9 @@ week[time.to_date] = true
 week.monday        #=> true
 week.monday?       #=> true
 week[:monday]      #=> true
+week["monday"]     #=> true (again, case-insensitive)
 week[1]            #=> true
+week["1"]          #=> true
 week[time]         #=> true
 week[time.to_date] #=> true
 ```
@@ -112,6 +116,8 @@ week.dates_in(from..to)   # find matching dates in a range of dates
 week.next_date            # finds next matching date from today
 week.next_date(some_date) # finds next matching date from (and including) some_date
 ```
+
+In this example, `some_date` may be either a `Date` or a `Time` object. If it's the latter, it'll be converted using `#to_date`.
 
 If ActiveSupport's time zone support is available, `next_date` with no argument will default to the time zone-aware `Date.current` instead of `Date.today`.
 
