@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = 'daniel@stimulacrum.com'
   s.homepage    = 'https://github.com/Flambino/week_sauce'
   
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 1.9.2'
   
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'tzinfo', '~> 0.3.29'
