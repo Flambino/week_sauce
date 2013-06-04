@@ -366,7 +366,7 @@ describe WeekSauce do
     end
     
     describe "dup" do
-      let(:week) { WeekSauce.new(rand(0..127)) }
+      let(:week) { WeekSauce.new(rand(max+1)) }
       
       it "dups to a new instance" do
         week.dup.to_i.should == week.to_i
