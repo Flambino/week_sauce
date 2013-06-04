@@ -195,6 +195,17 @@ class WeekSauce
     DAY_NAMES.select { |day| self[day] }
   end
   
+  # Returns a hash where the keys are the week's 7 days
+  # as symbols, and the values are booleans
+  def to_hash
+    Hash[ DAY_NAMES.map { |day| [day, self[day]] } ]
+  end
+  
+  # Returns the number of "set" days
+  def count
+    to_a.count
+  end
+  
   # Returns a string with the bitmask value and a list of
   # "set" days, or a simple message if all/no days are set
   def inspect
@@ -206,12 +217,6 @@ class WeekSauce
       list = to_a.map { |day| day.to_s.sub(/./, &:upcase) }.join(", ")
       "#{@value}: #{list}"
     end
-  end
-  
-  # Returns a hash where the keys are the week's 7 days
-  # as symbols, and the values are booleans
-  def to_hash
-    Hash[ DAY_NAMES.map { |day| [day, self[day]] } ]
   end
   
   # Return the next date matching the bitmask, or +nil+ if the

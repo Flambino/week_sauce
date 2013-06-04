@@ -127,6 +127,7 @@ Lastly, a few utility methods:
 week.to_i    #=> the raw integer bitmask
 week.to_a    #=> array of the selected days' names, e.g. [:monday, :thursday]
 week.to_hash #=> hash with day names as keys, and the day's boolean state as value
+week.count   #=> number of days set (0..7)
 week.inspect #=> string describing the bitmask values and days, e.g. "3: Sunday, Monday"
 ```
 

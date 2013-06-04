@@ -390,6 +390,15 @@ describe WeekSauce do
         week.inspect.should == "127: All days set"
       end
     end
+    
+    describe "count" do
+      it "returns the number of days set" do
+        week = WeekSauce.new
+        week.count.should == 0
+        week.all!.count.should == 7
+        week.set!(0, 2, 5).count.should == 3
+      end
+    end
   end
   
   describe "comparison" do
